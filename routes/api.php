@@ -12,9 +12,9 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('upload', 'IngestCSVController@upload');
-Route::get('status', 'IngestCSVController@index');
-Route::get('download/{status}', 'IngestCSVController@show'); // either success or failure
+Route::post('upload', 'UserCSVController@upload');
+Route::get('status', 'UserCSVController@index');
+Route::get('download/{status}', 'UserCSVController@show'); // either success or failure
     
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

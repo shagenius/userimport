@@ -14,4 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
-//Route::get('download/{status}', 'IngestCSVController@show'); // either success or failure
+
+Route::get('/import', 'UserCSVController@index')->name('home'); 
+Route::post('/upload', 'UserCSVController@upload')->name('csv.upload'); 

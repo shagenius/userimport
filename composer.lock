@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94d4bf9ac7f4a933030e46a346ee2917",
+    "content-hash": "1875bac8c151aa2594a471c146ef557d",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -676,6 +676,63 @@
                 "psysh"
             ],
             "time": "2019-08-07T15:10:45+00:00"
+        },
+        {
+            "name": "league/csv",
+            "version": "8.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/csv.git",
+                "reference": "0a1b535df48507f58ed3c7ab44e72272b11163ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/csv/zipball/0a1b535df48507f58ed3c7ab44e72272b11163ac",
+                "reference": "0a1b535df48507f58ed3c7ab44e72272b11163ac",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "^1.9",
+                "phpunit/phpunit": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "8.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Csv\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ignace Nyamagana Butera",
+                    "email": "nyamsprod@gmail.com",
+                    "homepage": "https://github.com/nyamsprod/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Csv data manipulation made easy in PHP",
+            "homepage": "http://csv.thephpleague.com",
+            "keywords": [
+                "csv",
+                "export",
+                "filter",
+                "import",
+                "read",
+                "write"
+            ],
+            "time": "2015-12-11T09:28:14+00:00"
         },
         {
             "name": "league/flysystem",
@@ -2891,6 +2948,107 @@
                 "environment"
             ],
             "time": "2019-09-10T21:37:39+00:00"
+        },
+        {
+            "name": "wilgucki/csv",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wilgucki/csv.git",
+                "reference": "c740a98b53e224958818ca1a82f313ce25162ca8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wilgucki/csv/zipball/c740a98b53e224958818ca1a82f313ce25162ca8",
+                "reference": "c740a98b53e224958818ca1a82f313ce25162ca8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "wilgucki/php-csv": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Wilgucki\\Csv\\CsvServiceProvider"
+                    ],
+                    "aliases": {
+                        "CsvReader": "Wilgucki\\Csv\\Facades\\Reader",
+                        "CsvWriter": "Wilgucki\\Csv\\Facades\\Writer"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wilgucki\\Csv\\": "src",
+                    "Wilgucki\\Csv\\Test\\": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maciej Wilgucki",
+                    "email": "mwilgucki@gmail.com"
+                }
+            ],
+            "description": "Laravel 5 package for writing and reading CSV files",
+            "keywords": [
+                "csv",
+                "laravel"
+            ],
+            "time": "2018-07-15T11:27:43+00:00"
+        },
+        {
+            "name": "wilgucki/php-csv",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wilgucki/php-csv.git",
+                "reference": "8050cd0ccf2a3d1c8d7d538d31559d182ade43bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wilgucki/php-csv/zipball/8050cd0ccf2a3d1c8d7d538d31559d182ade43bb",
+                "reference": "8050cd0ccf2a3d1c8d7d538d31559d182ade43bb",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "^2.17",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Wilgucki\\PhpCsv\\": "src",
+                    "Wilgucki\\PhpCsv\\Tests\\": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maciej Wilgucki",
+                    "email": "mwilgucki@gmail.com"
+                }
+            ],
+            "description": "Object oriented way of managing CSV files",
+            "keywords": [
+                "csv",
+                "php"
+            ],
+            "time": "2019-05-12T09:20:02+00:00"
         }
     ],
     "packages-dev": [
