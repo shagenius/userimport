@@ -69,7 +69,7 @@
                 <div class="title m-b-md">
                     User CSV Import
                 </div>
-                <form class="form-horizontal" method="POST" action="{{ route('csv.upload') }}" enctype="multipart/form-data">
+                <form class="form-horizontal" method="POST" action="{{ route('csv.store') }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
 
                     <div class="form-group{{ $errors->has('csv_file') ? ' has-error' : '' }}">

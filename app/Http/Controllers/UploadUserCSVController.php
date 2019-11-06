@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\UserCSV;
+use App\UploadUserCSV;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Jobs\ProcessUserCSV;
-use Wilgucki\Csv\Facades\Reader as CsvReader;
+use App\User;
+use Symfony\Component\Process\Process;
 
-class UserCSVController extends Controller
+class UploadUserCSVController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,17 +17,23 @@ class UserCSVController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        
-     
+    {     
         return view('index');
     }
 
     
-    public function upload(Request $request)
+    public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), UserCSV::rules());
+        $userCsv = $request->file('user_file');
         
+        $validator = Validator::make($request->all(), UploadUserCSV::rules());
+       
+        $validator->after(function($validator) use ($userCsv) {
+           if ($userCsv->guessClientExtension()!=='csv') {
+               $validator->errors()->add('field', 'File should be in csv format');
+           }
+       });
+       
         if($validator->fails()){
             return response()->json([
                 'data' => array(
@@ -35,15 +41,38 @@ class UserCSVController extends Controller
                 )
             ], 400);
         }
-        
-        $userCsv = $request->file('user_file')->getRealPath();
-        
-        $reader = CsvReader::open($userCsv);
-        
-        while (($line = $reader->readLine()) !== false) {
-            print_r($line);
+              
+        $userFile =  UploadUserCSV::uploadFile($userCsv);
+        $row = 1;
+        $header = [];
+        if (($handle = fopen($userFile, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $num = count($data);
+                if($row==1) {
+                    for ($c=0; $c < $num; $c++) {
+                        $header[$data[$c]] = trim($c);
+                    }
+                } else {
+                        $user = new User();
+                        $user->first_name = trim($data[$header['first_name']]);
+                        $user->last_name = trim($data[$header['last_name']]);
+                        $user->email = trim($data[$header['email']]);
+                        $user->password = bcrypt(trim($data[$header['password']]));
+                        $user->platforms = trim($data[$header['platforms']]);
+                        $user->save();
+                }
+                $row++;
+            }
+            fclose($handle);
         }
-        
+//       $process = new Process('php ../artisan import:csv');
+//       $process->start();
+        return response()->json([
+                'data' => array(
+                        'status' => 'converting'
+                )
+            ], 200);
+
     }
     
     /**

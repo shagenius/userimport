@@ -15,5 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/import', 'UserCSVController@index')->name('home'); 
-Route::post('/upload', 'UserCSVController@upload')->name('csv.upload'); 
+Route::get('/upload', 'UploadUserCSVController@index')->name('upoad'); 
+Route::post('/store', 'UploadUserCSVController@store')->name('csv.store'); 
