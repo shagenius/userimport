@@ -37,6 +37,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     
+    
+    //protected $appends = ['extra_fields', 'errors'];
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -45,8 +48,30 @@ class User extends Authenticatable
     public static function rules()
      {
          return [
-             'first_name' => 'required',
-             'last_name' => 'required'
+             'first_name' => 'required|alpha',
+             'last_name' => 'required|alpha',
+             'email' => 'required|email',
+             'password' => 'required|min:8',
+             'platforms' => 'required|in:ios,windows,android,web'
          ];
      }
+    
+    /**
+     * Get extra fields
+     * @return type
+     */
+    public function getExtraFieldsAttribute()
+    {
+        return isset($this->attributes['extra_fields']) ? $this->attributes['extra_fields'] : ''; 
+    }
+    
+    /**
+     * Get errors
+     * @return type
+     */
+    public function getErrorsAttribute()
+    {
+        return isset($this->attributes['errors']) ? $this->attributes['errors'] : ''; 
+    }
+    
 }

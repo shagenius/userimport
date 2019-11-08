@@ -8,9 +8,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 
 class UploadUserCSVController extends Controller
 {
+    protected $required_headers = ['First Name', 'Last Name', 'Email', 'Password', 'Platforms'];
+    
     /**
      * Display a listing of the resource.
      *
@@ -28,11 +33,12 @@ class UploadUserCSVController extends Controller
         
         $validator = Validator::make($request->all(), UploadUserCSV::rules());
        
-        $validator->after(function($validator) use ($userCsv) {
-           if ($userCsv->guessClientExtension()!=='csv') {
-               $validator->errors()->add('field', 'File should be in csv format');
-           }
-       });
+//        $validator->after(function($validator) use ($userCsv) {
+//           if ($userCsv->guessClientExtension()!=='csv') {
+//               echo $userCsv->guessClientExtension();
+//               $validator->errors()->add('field', 'File should be in csv format');
+//           }
+//       });
        
         if($validator->fails()){
             return response()->json([
@@ -41,7 +47,7 @@ class UploadUserCSVController extends Controller
                 )
             ], 400);
         }
-              
+
         $userFile =  UploadUserCSV::uploadFile($userCsv);
         $row = 1;
         $header = [];
@@ -50,16 +56,47 @@ class UploadUserCSVController extends Controller
                 $num = count($data);
                 if($row==1) {
                     for ($c=0; $c < $num; $c++) {
-                        $header[$data[$c]] = trim($c);
+       
                     }
+                    $raw_header = collect($data);
+                    $required_header = collect($this->required_headers);
+                        if(!$raw_header->intersect($required_header)==$required_header){
+                            return response()->json([
+                                'data' => array(
+                                    'message' => 'Uploaded file is not valid, missing required columns.'                            
+                                )
+                            ], 400);
+                        }
+                   
+                        $header = collect($data)->map(function ($item, $key) {
+                            return Str::snake($item);
+                        })->flip();
                 } else {
-                        $user = new User();
-                        $user->first_name = trim($data[$header['first_name']]);
-                        $user->last_name = trim($data[$header['last_name']]);
-                        $user->email = trim($data[$header['email']]);
-                        $user->password = bcrypt(trim($data[$header['password']]));
-                        $user->platforms = trim($data[$header['platforms']]);
-                        $user->save();
+                        $successUserData = Storage::disk('local')->exists('success.json')  ? json_decode(Storage::disk('local')->get('success.json')) : array();
+                        $errorUserData = Storage::disk('local')->exists('error.json')  ? json_decode(Storage::disk('local')->get('error.json')) : array();
+                        
+                        print_r($data);exit;
+                                
+                        $request = new Request($row);
+                         echo 'here';exit;
+                        $data = $request->all();
+                        
+                        $user = new User($data);
+                        
+                        $validator = Validator::make($data, User::rules());
+                        
+                        if($validator->fails()){
+                            $user->setAppends(['errors','extra_fields'])->toArray();
+                            $user->errors = $validator->errors()->toArray();
+                            $user->extra_fields = $num;
+                            $invalid_user = $user->toArray();
+                            $errorUserData[] =  $invalid_user;
+                            Storage::disk('local')->put('error.json', json_encode($errorUserData));
+                        } else {
+                            $valid_user = $user->toArray();
+                            $successUserData[] =  $valid_user;
+                            Storage::disk('local')->put('success.json', json_encode($successUserData));
+                        }
                 }
                 $row++;
             }
@@ -97,4 +134,5 @@ class UploadUserCSVController extends Controller
             ], 200);
         
     }
+    
 }
